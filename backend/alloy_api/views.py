@@ -53,12 +53,16 @@ class AlloyCompositionViewSet(viewsets.ModelViewSet):
             'materialClassifierAccuracy': metadata.get('classifier_accuracy', 0) * 100,
             'quantityRegressorR2': metadata.get('regressor_r2', 0) * 100,
             'qualityPredictorR2': metadata.get('quality_predictor_r2', 0) * 100,
+            'qualityPredictorXGBoostR2': metadata.get('quality_predictor_xgboost_r2', 0) * 100,
+            'qualityPredictorLightGBMR2': metadata.get('quality_predictor_lightgbm_r2', 0) * 100,
             'quantityMAE': metadata.get('regressor_mae', 0),
             'averageAccuracy': (
                 metadata.get('classifier_accuracy', 0) * 100 +
                 metadata.get('regressor_r2', 0) * 100 +
-                metadata.get('quality_predictor_r2', 0) * 100
-            ) / 3,
+                metadata.get('quality_predictor_r2', 0) * 100 +
+                metadata.get('quality_predictor_xgboost_r2', 0) * 100 +
+                metadata.get('quality_predictor_lightgbm_r2', 0) * 100
+            ) / 5,
             'modelStatus': 'PRODUCTION READY',
             'modelVersion': metadata.get('model_version', '2.0_real_data'),
             'trainedAt': metadata.get('trained_at', ''),
