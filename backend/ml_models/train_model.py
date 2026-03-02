@@ -152,21 +152,21 @@ def plot_regression_results(y_true, y_pred, model_name, metric_r2, metric_mae):
     """
     fig, axes = plt.subplots(1, 2, figsize=(14, 5))
     fig.suptitle(f'{model_name} - Regression Analysis', fontsize=14, fontweight='bold')
-    
+
     # Plot 1: Actual vs Predicted Scatter
     axes[0].scatter(y_true, y_pred, alpha=0.6, s=20, color='steelblue', edgecolors='navy')
-    
+
     # Perfect prediction line
     min_val = min(y_true.min(), y_pred.min())
     max_val = max(y_true.max(), y_pred.max())
     axes[0].plot([min_val, max_val], [min_val, max_val], 'r--', lw=2, label='Perfect Prediction')
-    
+
     axes[0].set_xlabel('Actual Values', fontsize=11, fontweight='bold')
     axes[0].set_ylabel('Predicted Values', fontsize=11, fontweight='bold')
     axes[0].set_title('Actual vs Predicted (Consistency View)', fontsize=12)
     axes[0].legend(loc='upper left')
     axes[0].grid(True, alpha=0.3)
-    
+
     # Plot 2: Residuals (Prediction Errors)
     residuals = y_true - y_pred
     axes[1].scatter(y_pred, residuals, alpha=0.6, s=20, color='darkgreen', edgecolors='black')
@@ -176,12 +176,12 @@ def plot_regression_results(y_true, y_pred, model_name, metric_r2, metric_mae):
     axes[1].set_title('Residual Plot (Error Analysis)', fontsize=12)
     axes[1].legend(loc='upper left')
     axes[1].grid(True, alpha=0.3)
-    
+
     # Add metrics text box
     metrics_text = f'R² Score: {metric_r2*100:.2f}%\nMAE: {metric_mae:.2f}'
-    fig.text(0.5, 0.02, metrics_text, ha='center', fontsize=10, 
+    fig.text(0.5, 0.02, metrics_text, ha='center', fontsize=10,
              bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8))
-    
+
     plt.tight_layout(rect=[0, 0.05, 1, 0.96])
     return fig
 
@@ -310,22 +310,22 @@ def train_models():
     print("\n" + "-"*80)
     print("GENERATING REGRESSION PLOTS")
     print("-"*80)
-    
+
     current_dir = os.path.dirname(os.path.abspath(__file__))
     plot_dir = os.path.join(current_dir, 'plots')
     os.makedirs(plot_dir, exist_ok=True)
-    
+
     print("Creating regression analysis plots...")
-    
+
     # Plot 1: Quantity Regressor
-    fig_qty = plot_regression_results(y_qty_test, y_pred_quantity, 
+    fig_qty = plot_regression_results(y_qty_test, y_pred_quantity,
                                       "Quantity Regressor - Gradient Boosting",
                                       qty_r2, qty_mae)
     qty_plot_path = os.path.join(plot_dir, '01_quantity_regression_plot.png')
     fig_qty.savefig(qty_plot_path, dpi=300, bbox_inches='tight')
     plt.close(fig_qty)
     print(f"Saved: {qty_plot_path}")
-    
+
     # Plot 2: Quality Predictor
     fig_qual = plot_regression_results(y_qual_test, y_pred_quality,
                                        "Quality Predictor - Random Forest",
@@ -334,11 +334,11 @@ def train_models():
     fig_qual.savefig(qual_plot_path, dpi=300, bbox_inches='tight')
     plt.close(fig_qual)
     print(f"Saved: {qual_plot_path}")
-    
+
     # Plot 3: Model Comparison Dashboard
     fig_compare = plt.figure(figsize=(14, 8))
     fig_compare.suptitle('Model Performance Comparison Dashboard', fontsize=16, fontweight='bold')
-    
+
     # Subplot 1: Model Accuracies
     ax1 = plt.subplot(2, 2, 1)
     models = ['Classifier\n(Material)', 'Regressor\n(Quantity)', 'Predictor\n(Quality)']
@@ -349,10 +349,10 @@ def train_models():
     ax1.set_ylim([0, 105])
     ax1.grid(axis='y', alpha=0.3)
     for i, (bar, acc) in enumerate(zip(bars, accuracies)):
-        ax1.text(bar.get_x() + bar.get_width()/2, acc + 2, f'{acc:.1f}%', 
+        ax1.text(bar.get_x() + bar.get_width()/2, acc + 2, f'{acc:.1f}%',
                 ha='center', va='bottom', fontweight='bold')
     ax1.set_title('Model Accuracy Comparison', fontweight='bold')
-    
+
     # Subplot 2: Error Metrics
     ax2 = plt.subplot(2, 2, 2)
     metrics = ['MAE', 'RMSE']
@@ -368,7 +368,7 @@ def train_models():
     ax2.set_xticklabels(metrics)
     ax2.legend()
     ax2.grid(axis='y', alpha=0.3)
-    
+
     # Subplot 3: Prediction Consistency (Std Dev of Residuals)
     ax3 = plt.subplot(2, 2, 3)
     qty_residuals_std = np.std(y_qty_test - y_pred_quantity)
@@ -380,9 +380,9 @@ def train_models():
     ax3.set_title('Prediction Consistency (Lower is Better)', fontweight='bold')
     ax3.grid(axis='y', alpha=0.3)
     for bar, val in zip(bars, consistency_vals):
-        ax3.text(bar.get_x() + bar.get_width()/2, val + 5, f'{val:.2f}', 
+        ax3.text(bar.get_x() + bar.get_width()/2, val + 5, f'{val:.2f}',
                 ha='center', va='bottom', fontweight='bold')
-    
+
     # Subplot 4: R² Scores
     ax4 = plt.subplot(2, 2, 4)
     r2_scores = [qty_r2*100, quality_r2*100]
@@ -393,15 +393,15 @@ def train_models():
     ax4.set_title('R² Score (Variance Explained)', fontweight='bold')
     ax4.grid(axis='y', alpha=0.3)
     for bar, score in zip(bars, r2_scores):
-        ax4.text(bar.get_x() + bar.get_width()/2, score + 2, f'{score:.1f}%', 
+        ax4.text(bar.get_x() + bar.get_width()/2, score + 2, f'{score:.1f}%',
                 ha='center', va='bottom', fontweight='bold')
-    
+
     plt.tight_layout()
     compare_plot_path = os.path.join(plot_dir, '00_model_comparison_dashboard.png')
     fig_compare.savefig(compare_plot_path, dpi=300, bbox_inches='tight')
     plt.close(fig_compare)
     print(f"Saved: {compare_plot_path}")
-    
+
     print(f"\nAll plots saved to: {plot_dir}")
     #
     # ============ MODEL 4: LIGHTGBM REGRESSOR ============
