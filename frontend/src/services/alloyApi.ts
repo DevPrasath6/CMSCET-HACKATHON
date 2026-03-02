@@ -1,6 +1,6 @@
 // Support both development and production environments
-const API_BASE_URL = 
-  import.meta.env.VITE_API_URL || 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
   (import.meta.env.DEV ? 'http://localhost:8000/api' : '/api');
 
 export interface RecommendationRequest {
@@ -47,7 +47,7 @@ class AlloyAPI {
     const queryParams = new URLSearchParams();
     if (params.hours) queryParams.append('hours', params.hours.toString());
     if (params.furnace_id) queryParams.append('furnace_id', params.furnace_id);
-    
+
     return this.request(`/ai/quality-analysis/?${queryParams.toString()}`);
   }
 
@@ -75,7 +75,7 @@ class AlloyAPI {
     const queryParams = new URLSearchParams();
     if (params.hours) queryParams.append('hours', params.hours.toString());
     if (params.furnace_id) queryParams.append('furnace_id', params.furnace_id);
-    
+
     return this.request(`/process-data/?${queryParams.toString()}`);
   }
 
